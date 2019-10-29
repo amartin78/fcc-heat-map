@@ -112,6 +112,46 @@ function heatMap(dataset) {
         .attr('y', (d) => yScale(d['month']-2.08))
 
 
+        // let colors = ['orange', 'blue', 'green'];
+
+
+        let label = svg.append('g')
+            .attr('id', 'legend')
+            // .attr('transform', 'translate(200, 460)')
+
+        label.append('text')
+            .attr('id', 'legend')
+            .attr('x', 226)
+            .attr('y', 474)
+            .text('Color')
+        
+        label.append('rect')
+            .attr('x', 200)
+            .attr('y', 460)
+            .attr('width', '1rem')
+            .attr('height', '1rem')
+            .attr('fill', 'blue')
+
+        
+
+        
+
+
+
+        
+        
+        
+        
+        
+            // svg.append('rect')
+        //     .attr('x', 200)
+        //     .attr('y', 460)
+        //     .attr('width', '1rem')
+        //     .attr('height', '1rem')
+        //     .attr('fill', 'blue')
+
+            
+
 
     
 }
