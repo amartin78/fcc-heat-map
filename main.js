@@ -78,13 +78,24 @@ function heatMap(dataset) {
                     .attr('transform', 'translate(0, -14)'))
         .call(g => g.selectAll('.tick text')
                     .attr('dy', '-11'));
-                
+
+    
+    let tooltip = d3.select('body')
+                    .append('div')
+                    .attr('id', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('z-index', '10')
+                    // .attr('width', '1rem')
+                    // .attr('height', '3rem')
+                    .style('visibility', 'hidden')
+                    // .text('tooltip info...')
 
     svg.selectAll('rect')
         .data(mVariance)
         .enter()
         .append('rect')
         .attr('class', 'cell')
+        .style('position', 'relative')
         .attr('fill', (d) => {
 
             let temp = bTemperature + d['variance'];
@@ -110,7 +121,20 @@ function heatMap(dataset) {
         .attr('height', '1.85rem')
         .attr('x', (d) => xScale(d['year']))
         .attr('y', (d) => yScale(d['month']-2.08))
+        .on('mouseover', (d) => {
+            // d3.select(this).attr('fill', 'pink')
+            tooltip.style('visibility', 'visible')
+            tooltip.attr('data-year', d['year'])
+            tooltip.html(d['year'] + ' ' + d['variance'] )
+                    .style('left', padding + xScale(d['year']))
+                    .style('top', padding + yScale(d['month']))
+            
+                    console.log(this)
 
+        })
+        .on('mouseout', (d, i) => {
+            tooltip.style('visibility', 'hidden')
+        })
 
         let colors = ['white', 'blue', 'green', 'orange'];
 
@@ -137,26 +161,8 @@ function heatMap(dataset) {
             .attr('height', '1rem')
             .attr('fill', (d) => d)
 
-        
-
-        
-
-
-
-        
-        
-        
-        
-        
-            // svg.append('rect')
-        //     .attr('x', 200)
-        //     .attr('y', 460)
-        //     .attr('width', '1rem')
-        //     .attr('height', '1rem')
-        //     .attr('fill', 'blue')
-
+     
             
-
 
     
 }
