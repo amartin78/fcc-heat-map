@@ -16,9 +16,11 @@ d3.select('body')
 
 function heatMap(dataset) {
 
-    const width = 1000;
-    const height = 500;
-    const padding = 100;
+    // const width = 1000;
+    // const height = 500;
+    const width = 1200;
+    const height = 530;
+    const padding = 80;
 
     const bTemperature = dataset['baseTemperature'];
     const mVariance = dataset['monthlyVariance'];
@@ -85,10 +87,9 @@ function heatMap(dataset) {
                     .attr('id', 'tooltip')
                     .style('position', 'absolute')
                     .style('z-index', '10')
-                    // .attr('width', '1rem')
-                    // .attr('height', '3rem')
+                    .style('background-color', 'lightGrey')
+                    .style('padding', '0.8rem')
                     .style('visibility', 'hidden')
-                    // .text('tooltip info...')
 
     svg.selectAll('rect')
         .data(mVariance)
@@ -117,27 +118,24 @@ function heatMap(dataset) {
         .attr('data-year', (d) => d['year'])
         .attr('data-month', (d) => d['month'] - 1)
         .attr('data-temp', (d) => bTemperature + d['variance'])
-        .attr('width', '0.3rem')
-        .attr('height', '1.85rem')
+        // .attr('width', '0.3rem')
+        // .attr('height', '1.85rem')
+        .attr('width', '0.32rem')
+        .attr('height', '2.3rem')
         .attr('x', (d) => xScale(d['year']))
         .attr('y', (d) => yScale(d['month']-2.08))
         .on('mouseover', (d) => {
-            // d3.select(this).attr('fill', 'pink')
             tooltip.style('visibility', 'visible')
             tooltip.attr('data-year', d['year'])
-            tooltip.html(d['year'] + ' ' + d['variance'] )
-                    .style('left', padding + xScale(d['year']))
+            tooltip.html(d['year'] + ' ' + d['month'] + ' ' + '<br>' + d['variance'] )
+                    .style('left', padding + xScale(d['year']) - 200)
                     .style('top', padding + yScale(d['month']))
-            
-                    console.log(this)
 
         })
-        .on('mouseout', (d, i) => {
-            tooltip.style('visibility', 'hidden')
-        })
+        .on('mouseout', (d) => tooltip.style('visibility', 'hidden'))
+
 
         let colors = ['white', 'blue', 'green', 'orange'];
-
 
         let label = svg.append('g')
             .attr('id', 'legend')
