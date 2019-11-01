@@ -5,7 +5,7 @@ d3.json('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     });
 
 d3.select('body')
-    .append('h1')
+    .append('h2')
     .attr('id', 'title')
     .text('Monthly Global Land-Surface Temperature');
 
@@ -20,7 +20,7 @@ function heatMap(dataset) {
     // const height = 500;
     const width = 1200;
     const height = 530;
-    const padding = 80;
+    const padding = 100;
 
     const bTemperature = dataset['baseTemperature'];
     const mVariance = dataset['monthlyVariance'];
@@ -71,6 +71,8 @@ function heatMap(dataset) {
         .attr('id', 'x-axis')
         .attr('transform', 'translate(0,' + (height - padding) + ')')
         .call(xAxis)
+        .call(g => g.selectAll('.tick text')
+                    .style('font-size', '0.65rem'));
 
     svg.append('g')
         .attr('id', 'y-axis')
@@ -79,6 +81,8 @@ function heatMap(dataset) {
         .call(g => g.selectAll('.tick line')
                     .attr('transform', 'translate(0, -14)'))
         .call(g => g.selectAll('.tick text')
+                    .style('font-size', '0.75rem')
+                    .attr('x', '-14')
                     .attr('dy', '-11'));
 
     
@@ -87,9 +91,12 @@ function heatMap(dataset) {
                     .attr('id', 'tooltip')
                     .style('position', 'absolute')
                     .style('z-index', '10')
-                    .style('background-color', 'lightGrey')
-                    .style('padding', '0.8rem')
+                    .style('opacity', '0.85')
+                    .style('border-radius', '5px')
+                    .style('background-color', '#fff')
+                    .style('padding', '0.6rem')
                     .style('visibility', 'hidden')
+                    // .style('display', 'flex')
 
     svg.selectAll('rect')
         .data(mVariance)
@@ -102,16 +109,25 @@ function heatMap(dataset) {
             let temp = bTemperature + d['variance'];
             switch(true) {
                 case (temp < 3):
-                    color = 'white';
-                    break;
-                case (temp < 6):
                     color = 'blue';
                     break;
-                case (temp < 9):
-                    color = 'green';
+                case (temp < 6):
+                    color = 'lightBlue';
                     break;
+                case (temp < 7):
+                        color = 'lightGreen';
+                        break;
+                case (temp < 8):
+                        color = 'green';
+                        break;
+                case (temp < 9):
+                        color = 'peru';
+                        break;
+                case (temp < 10):
+                        color = 'darkorange';
+                        break;
                 default: 
-                    color = 'orange';
+                    color = 'brown';
             }
             return color;
         })
@@ -121,21 +137,23 @@ function heatMap(dataset) {
         // .attr('width', '0.3rem')
         // .attr('height', '1.85rem')
         .attr('width', '0.32rem')
-        .attr('height', '2.3rem')
+        .attr('height', '2.1rem')
         .attr('x', (d) => xScale(d['year']))
         .attr('y', (d) => yScale(d['month']-2.08))
         .on('mouseover', (d) => {
             tooltip.style('visibility', 'visible')
             tooltip.attr('data-year', d['year'])
-            tooltip.html(d['year'] + ' ' + d['month'] + ' ' + '<br>' + d['variance'] )
-                    .style('left', padding + xScale(d['year']) - 200)
-                    .style('top', padding + yScale(d['month']))
+            tooltip.html( months[d['month']] + ' ' + d['year'] + '<br>' + 
+                         (bTemperature + d['variance']).toFixed(1) + '<br>' + d['variance'].toFixed(1))
+                    .style('left', padding + xScale(d['year']) - 20)
+                    .style('top', padding + yScale(d['month']) - 70)
+                    .style('text-align', 'center')
 
         })
         .on('mouseout', (d) => tooltip.style('visibility', 'hidden'))
 
 
-        let colors = ['white', 'blue', 'green', 'orange'];
+        let colors = ['blue', 'green', 'orange', 'brown'];
 
         let label = svg.append('g')
             .attr('id', 'legend')
