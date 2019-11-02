@@ -18,8 +18,9 @@ function heatMap(dataset) {
 
     const width = 1200;
     const height = 530;
-    const padding = 80;
+    const padding = 60;
     const pLeft = 120;
+    const pBottom = 100;
 
     const bTemperature = dataset['baseTemperature'];
     const mVariance = dataset['monthlyVariance'];
@@ -52,7 +53,7 @@ function heatMap(dataset) {
     const yScale = d3.scaleLinear()
                         .domain([d3.max(mVariance, (d) => d['month']), 
                                  d3.min(mVariance, (d) => d['month']) - 1])
-                        .range([height - padding, padding]);
+                        .range([height - pBottom, padding]);
 
     const xAxis = d3.axisBottom(xScale)
                     .ticks(27)
@@ -69,7 +70,7 @@ function heatMap(dataset) {
 
     svg.append('g')
         .attr('id', 'x-axis')
-        .attr('transform', 'translate(0,' + (height - padding) + ')')
+        .attr('transform', 'translate(0,' + (height - pBottom) + ')')
         .call(xAxis)
         .call(g => g.selectAll('.tick text')
                     .style('font-size', '0.65rem'));
@@ -87,7 +88,6 @@ function heatMap(dataset) {
 
     d3.selectAll('g.tick')
       .filter(function(d) {
-          console.log(d)
           return (d === 0)
       }).remove()
 
@@ -97,9 +97,9 @@ function heatMap(dataset) {
                     .attr('id', 'tooltip')
                     .style('position', 'absolute')
                     .style('z-index', '10')
-                    .style('opacity', '0.85')
+                    .style('opacity', '0.8')
                     .style('border-radius', '5px')
-                    .style('background-color', 'white')
+                    .style('background-color', 'beige')
                     .style('padding', '0.6rem')
                     .style('visibility', 'hidden')
 
@@ -173,7 +173,7 @@ function heatMap(dataset) {
             .enter()
             .append('rect')
             .attr('x', (d, i) => 424 + i * 44)
-            .attr('y', 486)
+            .attr('y', 480)
             .attr('width', '2.6rem')
             .attr('height', '1rem')
             .attr('fill', d => d)
@@ -183,7 +183,7 @@ function heatMap(dataset) {
             .enter()
             .append('text')
             .attr('x', ( d, i) => { return ( d == '10+' ? 436 : 430 ) + i * 44 } )
-            .attr('y', 516)
+            .attr('y', 510)
             .style('font-size', '0.8rem')
             .text(d => d)
 
