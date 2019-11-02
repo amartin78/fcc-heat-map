@@ -19,6 +19,7 @@ function heatMap(dataset) {
     const width = 1200;
     const height = 530;
     const padding = 80;
+    const pLeft = 120;
 
     const bTemperature = dataset['baseTemperature'];
     const mVariance = dataset['monthlyVariance'];
@@ -46,7 +47,7 @@ function heatMap(dataset) {
     const xScale = d3.scaleLinear()
                         .domain([d3.min(mVariance, (d) => d['year']), 
                                  d3.max(mVariance, (d) => d['year']) + 2])
-                        .range([padding, width - padding]);
+                        .range([pLeft, width - padding]);
 
     const yScale = d3.scaleLinear()
                         .domain([d3.max(mVariance, (d) => d['month']), 
@@ -75,12 +76,12 @@ function heatMap(dataset) {
 
     svg.append('g')
         .attr('id', 'y-axis')
-        .attr('transform', 'translate(' + padding + ', 0)')
+        .attr('transform', 'translate(' + pLeft + ', 0)')
         .call(yAxis)
         .call(g => g.selectAll('.tick line')
                     .attr('transform', 'translate(0, -18)'))
         .call(g => g.selectAll('.tick text')
-                    .style('font-size', '0.75rem')
+                    .style('font-size', '0.7rem')
                     .attr('x', '-14')
                     .attr('dy', '-15'));
 
@@ -107,37 +108,34 @@ function heatMap(dataset) {
         .enter()
         .append('rect')
         .attr('class', 'cell')
-        .style('position', 'relative')
         .attr('fill', (d) => {
 
             let temp = bTemperature + d['variance'];
+
             switch(true) {
-                case (temp < 3):
-                    color = 'blue';
+                case (temp < 4):
+                    color = 'hsl(220, 100%, 50%)';
                     break;
-                case (temp < 6):
-                    color = 'lightBlue';
-                    break;
-                case (temp < 7):
-                        color = 'lightGreen';
+                case (temp < 5):
+                        color = 'hsl(200, 100%, 50%)';
                         break;
-                case (temp < 7.5):
-                        color = 'green';
+                case (temp < 6):
+                        color = 'hsl(180, 100%, 50%)';
+                        break;
+                case (temp < 7):
+                        color = 'hsl(100, 90%, 40%)';
                         break;
                 case (temp < 8):
-                        color = 'yellow';
-                        break;
-                case (temp < 8.5):
-                        color = 'orange';
+                        color = 'hsl(90, 80%, 60%)';
                         break;
                 case (temp < 9):
-                        color = 'darkorange';
+                        color = 'hsl(55, 100%, 80%)';
                         break;
                 case (temp < 10):
-                        color = 'chocolate';
+                        color = 'hsl(50, 100%, 60%)';
                         break;
                 default: 
-                    color = 'brown';
+                    color = 'hsl(45, 100%, 50%)';
             }
             return color;
         })
@@ -145,7 +143,7 @@ function heatMap(dataset) {
         .attr('data-month', (d) => d['month'] - 1)
         .attr('data-temp', (d) => bTemperature + d['variance'])
         .attr('width', '0.32rem')
-        .attr('height', '1.93rem')
+        .attr('height', '1.95rem')
         .attr('x', (d) => xScale(d['year'] + 0.2))
         .attr('y', (d) => yScale(d['month'] - 1))
         .on('mouseover', (d) => {
@@ -161,8 +159,11 @@ function heatMap(dataset) {
         .on('mouseout', (d) => tooltip.style('visibility', 'hidden'))
 
 
-        let colors = [['cadetBlue', '3.5'], ['blue', '4'], ['green', '4.5'], ['orange', '5'], 
-                      ['brown', '5.5']];
+        let colors = ['hsl(220, 100%, 50%)', 'hsl(200, 100%, 50%)', 'hsl(180, 100%, 50%)',
+                      'hsl(100, 90%, 40%)',  'hsl(100, 90%, 40%)',  'hsl(55, 100%, 80%)',
+                      'hsl(50, 100%, 60%)',  'hsl(45, 100%, 50%)'];
+
+        let labels = ['0 to 4', '4 to 5', '5 to 6', '6 to 7', '7 to 8', '8 to 9', '9 to 10', '10+']
 
         let legend = svg.append('g')
             .attr('id', 'legend')
@@ -171,24 +172,23 @@ function heatMap(dataset) {
             .data(colors)
             .enter()
             .append('rect')
-            .attr('x', (d, i) => 200 + i * 42)
+            .attr('x', (d, i) => 424 + i * 44)
             .attr('y', 486)
-            .attr('width', '2.5rem')
+            .attr('width', '2.6rem')
             .attr('height', '1rem')
-            .attr('fill', d => d[0])
+            .attr('fill', d => d)
 
         legend.selectAll('text')
-            .data(colors)
+            .data(labels)
             .enter()
             .append('text')
-            .attr('id', 'legend')
-            .attr('x', ( d, i) => 200 + i * 46 )
+            .attr('x', ( d, i) => { return ( d == '10+' ? 436 : 430 ) + i * 44 } )
             .attr('y', 516)
             .style('font-size', '0.8rem')
-            .text(d => d[1])
+            .text(d => d)
 
-    
 }
+
 
 
 

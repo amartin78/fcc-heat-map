@@ -20,10 +20,6 @@ svg {
      background-color: beige;
 }
 
-.cell {
-
-}
-
 rect {
-    /* background-color: pink; */
+    position: relative;
 }
