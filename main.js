@@ -151,8 +151,8 @@ function heatMap(dataset) {
             tooltip.attr('data-year', d['year'])
             tooltip.html( months[d['month']] + ' ' + d['year'] + '<br>' + 
                          (bTemperature + d['variance']).toFixed(1) + '<br>' + d['variance'].toFixed(1))
-                    .style('left', padding + xScale(d['year']) - 20)
-                    .style('top', padding + yScale(d['month']) - 70)
+                    .style('left', (padding + xScale(d['year']) - 20) + 'px')
+                    .style('top', (padding + yScale(d['month']) - 70) + 'px')
                     .style('text-align', 'center')
 
         })
